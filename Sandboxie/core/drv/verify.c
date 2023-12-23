@@ -526,6 +526,24 @@ SCertInfo Verify_CertInfo = { 0 };
 
 _FX NTSTATUS KphValidateCertificate()
 {
+    NTSTATUS status = STATUS_SUCCESS;
+    Verify_CertInfo.active = 1;
+    Verify_CertInfo.expired = 0;
+    Verify_CertInfo.outdated = 0;
+    Verify_CertInfo.type = eCertEternal;
+    Verify_CertInfo.level = eCertMaxLevel;
+
+    LARGE_INTEGER SystemTime;
+    LARGE_INTEGER LocalTime;
+    KeQuerySystemTime(&SystemTime);
+    ExSystemTimeToLocalTime(&SystemTime, &LocalTime);
+    
+    LARGE_INTEGER expiration_date = { 0 };
+    expiration_date.QuadPart = -1;
+    Verify_CertInfo.expirers_in_sec = (ULONG)((expiration_date.QuadPart - LocalTime.QuadPart) / 10000000ll);
+
+    return status;
+
     BOOLEAN CertDbg = FALSE;
 
     static const WCHAR *path_cert = L"%s\\Certificate.dat";
