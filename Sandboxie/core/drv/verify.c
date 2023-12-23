@@ -538,6 +538,7 @@ _FX NTSTATUS KphValidateCertificate()
     KeQuerySystemTime(&SystemTime);
     ExSystemTimeToLocalTime(&SystemTime, &LocalTime);
     
+
     LARGE_INTEGER expiration_date = { 0 };
     expiration_date.QuadPart = -1;
     Verify_CertInfo.expirers_in_sec = (ULONG)((expiration_date.QuadPart - LocalTime.QuadPart) / 10000000ll);
